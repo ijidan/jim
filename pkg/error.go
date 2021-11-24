@@ -1,4 +1,4 @@
-package error
+package pkg
 
 import "github.com/pkg/errors"
 
@@ -23,12 +23,12 @@ var errorMap = map[int]error{
 }
 
 // GetErrorMessage 根据错误码获取错误信息
-func GetErrorMessage( code int) string  {
+func GetErrorMessage(code int) string {
 	var message string
-	if value,ok:=errorMap[code];ok{
-		message=value.Error()
-	}else{
-		message="error code not found"
+	if value, ok := errorMap[code]; ok {
+		message = value.Error()
+	} else {
+		message = "error code not found"
 	}
 	return message
 }

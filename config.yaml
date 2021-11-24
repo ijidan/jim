@@ -1,6 +1,6 @@
 app :
   name: app_1
-  environment: local
+  env: local
 http:
   host: 127.0.0.1
   port: 8081
@@ -31,5 +31,4 @@ redis:
 
 pageer:
   page: page
-  page_size:10
-
+  page_size: 10

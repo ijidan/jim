@@ -1,17 +1,16 @@
 package config
 
 import (
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"jim/internal/global"
+	"sync"
 )
 
-var Config config
-
 // Config 配置
-type config struct {
+type Config struct {
 	App struct {
-		Name        string `yaml:"name"`
-		environment string `yaml:"environment"`
+		Name string `yaml:"name"`
+		Env  string `yaml:"env"`
 	}
 	Http struct {
 		Host string `yaml:"host"`
@@ -43,40 +42,26 @@ type config struct {
 	}
 }
 
-func LoadConfigFromYaml()error  {
-	v:=viper.New()
-	v.AddConfigPath(global.ROOT)
-	v.SetConfigName("config")
-	v.SetConfigType("yaml")
+// NewConfig config instance
+func NewConfig(root string) *Config {
+	var once sync.Once
+	var instance *Config
+	once.Do(func() {
+		instance = &Config{}
+		v := viper.New()
+		v.AddConfigPath(root)
+		v.SetConfigName("config")
+		v.SetConfigType("yaml")
+		v.WatchConfig()
+		v.OnConfigChange(func(in fsnotify.Event) {
+		})
+		if err := v.ReadInConfig(); err != nil {
+			panic(err)
+		}
+		if err := v.Unmarshal(instance); err != nil {
+			panic(err)
+		}
 
-	if err:=v.ReadInConfig();err!=nil{
-		return err
-	}
-	return  nil
+	})
+	return instance
 }
-
-//func LoadConfigFromYaml (c *config) error  {
-//	v:=viper.New()
-//	v.AddConfigPath()
-//	v.SetConfigName("config")
-//	v.set
-//	v
-//	c.v = viper.New();
-//
-//	//设置配置文件的名字
-//	c.v.SetConfigName("config")
-//
-//	//添加配置文件所在的路径,注意在Linux环境下%GOPATH要替换为$GOPATH
-//	c.v.AddConfigPath("%GOPATH/src/")
-//	c.v.AddConfigPath("./")
-//
-//	//设置配置文件类型
-//	c.v.SetConfigType("yaml");
-//
-//	if err := c.v.ReadInConfig(); err != nil{
-//		return  err;
-//	}
-//
-//	log.Printf("age: %s, name: %s \n", c.v.Get("information.age"), c.v.Get("information.name"));
-//	return nil;
-//}
