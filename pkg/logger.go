@@ -2,11 +2,12 @@ package pkg
 
 import (
 	"github.com/sirupsen/logrus"
+	"jim/config"
 	"sync"
 )
 
 // NewLogger log instance
-func NewLogger() *logrus.Logger {
+func NewLogger(conf *config.Config) *logrus.Logger {
 	var once sync.Once
 	var instance *logrus.Logger
 	once.Do(func() {

@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/spf13/cast"
+	"fmt"
 	"jim/internal/global"
 	"jim/internal/router"
 )
 
 func main() {
 	http := global.NewGlobal().Config.Http
-	host := http.Host
-	port := http.Port
 	r := router.NewGin()
-	_ = r.Run(host + ":" + cast.ToString(port))
+	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
+	_ = r.Run(addr)
 }

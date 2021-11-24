@@ -2,6 +2,7 @@ package global
 
 import (
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"jim/config"
 	"jim/pkg"
 	"os"
@@ -13,6 +14,7 @@ type global struct {
 	Root   string
 	Config *config.Config
 	Logger *logrus.Logger
+	Db     *gorm.DB
 }
 
 // NewGlobal global instance
@@ -24,10 +26,12 @@ func NewGlobal() *global {
 		if err != nil {
 			panic(err)
 		}
+		config := config.NewConfig(dir)
 		instance = &global{
 			Root:   dir,
-			Config: config.NewConfig(dir),
-			Logger: pkg.NewLogger(),
+			Config: config,
+			Logger: pkg.NewLogger(config),
+			Db:     pkg.NewDb(config),
 		}
 	})
 	return instance
