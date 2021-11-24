@@ -1,0 +1,35 @@
+app :
+  name: app_1
+  environment: local
+http:
+  host: 127.0.0.1
+  port: 8081
+  log: log/gin.log
+
+websocket:
+  host: 127.0.0.1
+  port: 8082
+  log: log/websocket.log
+
+rpc:
+  host: 127.0.0.1
+  port: 8083
+  log: log/rpc.log
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: jidan
+  charset: utf8
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  db: 0
+
+pageer:
+  page: page
+  page_size:10
+
