@@ -11,4 +11,9 @@ var (
 	Config  = config.GetConfigInstance(Root)
 	Logger  = pkg.GetLoggerInstance(Config, Root)
 	Db      = pkg.GetDbInstance(Config)
+	Rd      = pkg.GetRdInstance(Config)
 )
+
+func Close() {
+	_ = Rd.Close()
+}

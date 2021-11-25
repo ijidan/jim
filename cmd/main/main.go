@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	defer global.Close()
 	http := global.Config.Http
 	r := router.NewGin()
 	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
