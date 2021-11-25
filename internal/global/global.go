@@ -7,13 +7,14 @@ import (
 )
 
 var (
-	Root, _  = os.Getwd()
-	Config   = config.GetConfigInstance(Root)
-	Logger   = pkg.GetLoggerInstance(Config, Root)
-	Db       = pkg.GetDbInstance(Config)
-	Rd       = pkg.GetRdInstance(Config)
-	Jaeger   = pkg.GetJaegerInstance(Config, "gim_api", "gim_api_root")
-	Response = pkg.GetResponseInstance()
+	Root, _   = os.Getwd()
+	Config    = config.GetConfigInstance(Root)
+	Logger    = pkg.GetLoggerInstance(Config, Root)
+	Db        = pkg.GetDbInstance(Config)
+	Rd        = pkg.GetRdInstance(Config)
+	Jaeger    = pkg.GetJaegerInstance(Config, "gim_api", "gim_api_root")
+	Response  = pkg.GetResponseInstance()
+	RequestId = "X-Request-Id"
 )
 
 func Close() {

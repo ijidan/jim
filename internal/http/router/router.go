@@ -20,7 +20,7 @@ func NewGin() *gin.Engine {
 	var instance *gin.Engine
 	once.Do(func() {
 		instance = gin.Default()
-		instance.Use(middleware.Recovery(), middleware.Logger())
+		instance.Use(middleware.Recovery(), middleware.Logger(), middleware.RequestId())
 		registerApi(instance)
 	})
 	return instance
