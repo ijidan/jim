@@ -1,0 +1,16 @@
+package middleware
+
+import (
+	"github.com/gin-gonic/gin"
+	"jim/internal/global"
+	"time"
+)
+
+func Jaeger() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		t := time.Now()
+		context.Next()
+		latency := time.Since(t)
+		global.Logger.Infoln(latency)
+	}
+}

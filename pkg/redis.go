@@ -7,16 +7,19 @@ import (
 	"sync"
 )
 
+var (
+	onceRd     sync.Once
+	instanceRd redis.Conn
+)
+
 func GetRdInstance(config *config.Config) redis.Conn {
-	var once sync.Once
-	var instance redis.Conn
-	var err error
-	once.Do(func() {
+	onceRd.Do(func() {
+		var err error
 		addr := fmt.Sprintf("%s:%d", config.Redis.Host, config.Redis.Port)
-		instance, err = redis.Dial("tcp", addr)
+		instanceRd, err = redis.Dial("tcp", addr)
 		if err != nil {
 			panic(err)
 		}
 	})
-	return instance
+	return instanceRd
 }

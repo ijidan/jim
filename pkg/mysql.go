@@ -8,16 +8,19 @@ import (
 	"sync"
 )
 
+var (
+	onceDb     sync.Once
+	instanceDb *gorm.DB
+)
+
 func GetDbInstance(conf *config.Config) *gorm.DB {
-	var once sync.Once
-	var instance *gorm.DB
-	once.Do(func() {
+	onceDb.Do(func() {
 		var err error
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", conf.Mysql.User, conf.Mysql.Password, conf.Mysql.Host, conf.Mysql.Port, conf.Mysql.Database, conf.Mysql.Charset)
-		instance, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		instanceDb, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		if err != nil {
 			panic(err)
 		}
 	})
-	return instance
+	return instanceDb
 }

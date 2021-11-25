@@ -6,7 +6,6 @@ import (
 	"sync"
 )
 
-// Config 配置
 type Config struct {
 	App struct {
 		Name string `yaml:"name"`
@@ -14,22 +13,22 @@ type Config struct {
 	}
 	Http struct {
 		Host string `yaml:"host"`
-		Port int    `yaml:"port"`
+		Port uint   `yaml:"port"`
 		Log  string `yaml:"log"`
 	}
 	Websocket struct {
 		Host string `yaml:"host"`
-		Port int    `yaml:"port"`
+		Port uint   `yaml:"port"`
 		Log  string `yaml:"log"`
 	}
 	Rpc struct {
 		Host string `yaml:"host"`
-		Port int    `yaml:"port"`
+		Port uint   `yaml:"port"`
 		Log  string `yaml:"log"`
 	}
 	Mysql struct {
 		Host     string `yaml:"host"`
-		Port     int    `yaml:"port"`
+		Port     uint   `yaml:"port"`
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 		Charset  string `yaml:"charset"`
@@ -37,18 +36,28 @@ type Config struct {
 	}
 	Redis struct {
 		Host     string `yaml:"host"`
-		Port     int    `yaml:"port"`
+		Port     uint   `yaml:"port"`
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 		db       int    `yaml:"db"`
 	}
+	Jaeger struct {
+		Host string `yaml:"host"`
+		Port uint   `yaml:"port"`
+	}
+	Pager struct {
+		PageSize uint `yaml:"page_size"`
+	}
 }
 
+var (
+	onceConfig     sync.Once
+	instanceConfig *Config
+)
+
 func GetConfigInstance(root string) *Config {
-	var once sync.Once
-	var instance *Config
-	once.Do(func() {
-		instance = &Config{}
+	onceConfig.Do(func() {
+		instanceConfig = &Config{}
 		v := viper.New()
 		v.AddConfigPath(root)
 		v.SetConfigName("config")
@@ -59,10 +68,9 @@ func GetConfigInstance(root string) *Config {
 		if err := v.ReadInConfig(); err != nil {
 			panic(err)
 		}
-		if err := v.Unmarshal(instance); err != nil {
+		if err := v.Unmarshal(instanceConfig); err != nil {
 			panic(err)
 		}
-
 	})
-	return instance
+	return instanceConfig
 }

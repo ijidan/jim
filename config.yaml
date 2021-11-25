@@ -1,5 +1,5 @@
 app :
-  name: app_1
+  name: gim
   env: local
 http:
   host: 127.0.0.1
@@ -31,6 +31,9 @@ redis:
   password: ""
   db: 0
 
-pageer:
-  page: page
+jaeger:
+  host: 127.0.0.1
+  port: 6381
+
+pager:
   page_size: 10
