@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"jim/internal/global"
+	"net/http"
 )
 
 // Pong pong
 func Pong(content *gin.Context) {
-	rsp := global.Reponse.JsonSuccess(gin.H{"message": "pong"}, "")
-	content.JSON(200, rsp)
+	err := errors.New("TEST")
+	panic(err)
+	rsp := global.Response.JsonSuccess(gin.H{"message": "pong"}, "")
+	content.JSON(http.StatusOK, rsp)
 }

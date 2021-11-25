@@ -24,7 +24,7 @@ var (
 	instanceResponse *Response
 )
 
-func NewResponse() *Response {
+func GetResponseInstance() *Response {
 	onceResponse.Do(func() {
 		instanceResponse = &Response{}
 	})
