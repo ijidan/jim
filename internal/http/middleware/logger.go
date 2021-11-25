@@ -11,6 +11,6 @@ func Logger() gin.HandlerFunc {
 		t := time.Now()
 		context.Next()
 		latency := time.Since(t)
-		global.NewGlobal().Logger.Infoln(latency)
+		global.Logger.Infoln(latency)
 	}
 }

@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"jim/internal/controller"
-	"jim/internal/middleware"
+	"jim/internal/http/controller"
+	"jim/internal/http/middleware"
 	"sync"
 )
 

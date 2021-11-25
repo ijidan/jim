@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-func NewDb(conf *config.Config) *gorm.DB {
+func GetDbInstance(conf *config.Config) *gorm.DB {
 	var once sync.Once
 	var instance *gorm.DB
 	once.Do(func() {

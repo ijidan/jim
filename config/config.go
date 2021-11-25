@@ -38,13 +38,13 @@ type Config struct {
 	Redis struct {
 		Host     string `yaml:"host"`
 		Port     int    `yaml:"port"`
+		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 		db       int    `yaml:"db"`
 	}
 }
 
-// NewConfig config instance
-func NewConfig(root string) *Config {
+func GetConfigInstance(root string) *Config {
 	var once sync.Once
 	var instance *Config
 	once.Do(func() {
