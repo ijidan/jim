@@ -9,7 +9,7 @@ import (
 func main() {
 	defer global.Close()
 	http := global.Config.Http
-	r := router.NewGin()
+	r := router.NewGin(global.Config)
 	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
 	_ = r.Run(addr)
 }

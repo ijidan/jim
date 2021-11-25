@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"jim/config"
 	"jim/internal/http/controller"
 	"jim/internal/http/middleware"
 	"sync"
@@ -15,12 +16,25 @@ func registerApi(r *gin.Engine) {
 	}
 }
 
-func NewGin() *gin.Engine {
+func NewGin(conf *config.Config) *gin.Engine {
 	var once sync.Once
 	var instance *gin.Engine
 	once.Do(func() {
+		env := conf.App.Env
+		switch env {
+		case "local":
+			gin.SetMode(gin.DebugMode)
+			break
+		case "test":
+			gin.SetMode(gin.TestMode)
+			break
+		case "production":
+		default:
+			gin.SetMode(gin.ReleaseMode)
+			break
+		}
 		instance = gin.Default()
-		instance.Use(middleware.Recovery(), middleware.Logger(), middleware.RequestId())
+		instance.Use(middleware.Recovery(), middleware.RequestId(), middleware.Logger())
 		registerApi(instance)
 	})
 	return instance

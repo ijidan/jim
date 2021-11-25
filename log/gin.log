@@ -1,2 +1,1 @@
-{"level":"info","msg":"map[X-Request-Id:]","time":"2021-11-25T16:47:19+08:00"}
-{"level":"fatal","msg":"TEST","time":"2021-11-25T16:46:58+08:00"}
+{"X-Request-Id":"5e4f7cd0-9240-4289-bb4c-9f954fbde4d0","level":"info","msg":"X-Request-Id","time":"2021-11-25T18:32:30+08:00"}
