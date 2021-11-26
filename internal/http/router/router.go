@@ -34,7 +34,7 @@ func NewGin(conf *config.Config) *gin.Engine {
 			break
 		}
 		instance = gin.Default()
-		instance.Use(middleware.Recovery(), middleware.RequestId(), middleware.Logger())
+		instance.Use(middleware.Recovery(), middleware.AppSetting(), middleware.AccessLog(), middleware.Jaeger())
 		registerApi(instance)
 	})
 	return instance

@@ -9,6 +9,7 @@ import (
 type Config struct {
 	App struct {
 		Name string `yaml:"name"`
+		Ver  string `yaml:"ver"`
 		Env  string `yaml:"env"`
 	}
 	Http struct {

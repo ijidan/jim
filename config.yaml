@@ -1,5 +1,6 @@
 app :
   name: gim
+  ver: 1.0.1
   env: local
 http:
   host: 127.0.0.1
@@ -33,7 +34,7 @@ redis:
 
 jaeger:
   host: 127.0.0.1
-  port: 6381
+  port: 6831
 
 pager:
   page_size: 10

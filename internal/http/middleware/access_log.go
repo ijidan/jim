@@ -6,7 +6,7 @@ import (
 	"jim/internal/global"
 )
 
-func Logger() gin.HandlerFunc {
+func AccessLog() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		requestId := context.GetString(global.RequestId)
 		global.Logger.WithFields(logrus.Fields{global.RequestId: requestId}).Info(global.RequestId)
