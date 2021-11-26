@@ -17,7 +17,7 @@ func Jaeger() gin.HandlerFunc {
 		defer func() {
 			_ = closer.Close()
 		}()
-		spanContext, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(context.Request.Header))
+		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(context.Request.Header))
 		if err != nil {
 			httpSpan = opentracing.StartSpan(context.Request.URL.Path)
 			defer httpSpan.Finish()
