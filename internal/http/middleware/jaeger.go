@@ -20,18 +20,18 @@ func Jaeger() gin.HandlerFunc {
 		spanContext, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(context.Request.Header))
 		if err != nil {
 			httpSpan = opentracing.StartSpan(context.Request.URL.Path)
+			defer httpSpan.Finish()
 		} else {
 			httpSpan = opentracing.StartSpan(context.Request.URL.Path,
 				opentracing.ChildOf(spanContext),
 				opentracing.Tag{Key: "user_agent", Value: context.Request.UserAgent},
 				opentracing.Tag{Key: string(ext.SpanKind), Value: "HTTP"},
 				opentracing.StartTime(time.Now()))
+			defer httpSpan.Finish()
 		}
 		context.Set("tracer_ctx", opentracing.ContextWithSpan(context, httpSpan))
 		context.Set("tracer", tracer)
 
 		context.Next()
-
-		defer httpSpan.Finish()
 	}
 }
