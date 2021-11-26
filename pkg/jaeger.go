@@ -26,5 +26,6 @@ func NewJaeger(conf *jConfig.Config, serviceName string) (opentracing.Tracer, io
 	if err != nil {
 		panic(err)
 	}
+	opentracing.SetGlobalTracer(tracer)
 	return tracer, closer
 }
