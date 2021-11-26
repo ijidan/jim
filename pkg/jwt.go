@@ -3,11 +3,14 @@ package pkg
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"sync"
 	"time"
 )
 
-// CreateToken 创建TOKEN
-func CreateToken(uid int64, secret string) (string, error) {
+type Jwt struct {
+}
+
+func (j *Jwt) createToken(uid int64, secret string) (string, error) {
 	claim := jwt.MapClaims{
 		"uid": uid,
 		"exp": time.Now().Add(3 * 24 * time.Hour).Unix(),
@@ -16,19 +19,17 @@ func CreateToken(uid int64, secret string) (string, error) {
 	return nt.SignedString([]byte(secret))
 }
 
-// RefreshToken 刷新TOKEN
-func RefreshToken(tokenStr string, secret string) (string, error) {
-	claim, err := VerifyToken(tokenStr)
+func (j *Jwt) refreshToken(tokenStr string, secret string) (string, error) {
+	claim, err := j.parseToken(tokenStr, secret)
 	if claim == nil || err != nil {
 		err = errors.New("parse token error")
 		return "", err
 	}
 	uid := claim["uid"]
-	return CreateToken(uid.(int64), secret)
+	return j.createToken(uid.(int64), secret)
 }
 
-// ParseToken 解析TOKEN
-func ParseToken(tokenStr string, secret string) (map[string]interface{}, error) {
+func (j *Jwt) parseToken(tokenStr string, secret string) (map[string]interface{}, error) {
 	getSecret := func(_secret string) func(token *jwt.Token) (i interface{}, err error) {
 		return func(token *jwt.Token) (i interface{}, err error) {
 			return []byte(_secret), nil
@@ -50,14 +51,41 @@ func ParseToken(tokenStr string, secret string) (map[string]interface{}, error) 
 	return claim, nil
 }
 
-const secret = "__jd__"
+var (
+	onceJwt     sync.Once
+	instanceJwt *Jwt
+)
 
-// GenToken 生成TOKEN
-func GenToken(uid int64) (string, error) {
-	return CreateToken(uid, secret)
+func GetJwtInstance() *Jwt {
+	onceJwt.Do(func() {
+		instanceJwt = &Jwt{}
+	})
+	return instanceJwt
 }
 
-// VerifyToken 校验TOKEN
-func VerifyToken(tokenStr string) (map[string]interface{}, error) {
-	return ParseToken(tokenStr, secret)
+func GenJwtToken(uid int64) string {
+	j := GetJwtInstance()
+	token, err := j.createToken(uid, Config.Jwt.Secret)
+	if err != nil {
+		panic(err)
+	}
+	return token
+}
+
+func VerifyJwtToken(tokenStr string) bool {
+	j := GetJwtInstance()
+	_, err := j.parseToken(tokenStr, Config.Jwt.Secret)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func ParseJwtToken(tokenStr string) map[string]interface{} {
+	j := GetJwtInstance()
+	claim, err := j.parseToken(tokenStr, Config.Jwt.Secret)
+	if err != nil {
+		panic(err)
+	}
+	return claim
 }

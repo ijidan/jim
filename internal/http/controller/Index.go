@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 	"jim/internal/global"
+	"jim/pkg"
 	"net/http"
 )
 
@@ -17,5 +18,8 @@ func Pong(content *gin.Context) {
 	}
 
 	rsp := global.Response.JsonSuccess(gin.H{"message": "pong"}, "")
+	userId := int64(1)
+	token := pkg.GenJwtToken(userId)
+	rsp := global.Response.JsonSuccess(gin.H{"message": "pong:" + token}, "")
 	content.JSON(http.StatusOK, rsp)
 }

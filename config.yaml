@@ -36,5 +36,8 @@ jaeger:
   host: 127.0.0.1
   port: 6831
 
+jwt:
+  secret: __jim__
+
 pager:
   page_size: 10

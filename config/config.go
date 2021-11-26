@@ -46,6 +46,9 @@ type Config struct {
 		Host string `yaml:"host"`
 		Port uint   `yaml:"port"`
 	}
+	Jwt struct {
+		Secret string `yaml:"secret"`
+	}
 	Pager struct {
 		PageSize uint `yaml:"page_size"`
 	}
