@@ -12,7 +12,6 @@ func registerApi(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		api.GET("/ping", controller.Pong)
-
 	}
 }
 
@@ -34,7 +33,7 @@ func NewGin(conf *config.Config) *gin.Engine {
 			break
 		}
 		instance = gin.Default()
-		instance.Use(middleware.Recovery(), middleware.AppSetting(), middleware.AccessLog(), middleware.Jaeger())
+		instance.Use(middleware.Recovery(), middleware.AppSetting(), middleware.AccessLog(), middleware.Jaeger(), middleware.JwtVerify())
 		registerApi(instance)
 	})
 	return instance

@@ -3,6 +3,7 @@ package pkg
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"jim/internal/global"
 	"sync"
 	"time"
 )
@@ -65,7 +66,7 @@ func GetJwtInstance() *Jwt {
 
 func GenJwtToken(uid int64) string {
 	j := GetJwtInstance()
-	token, err := j.createToken(uid, Config.Jwt.Secret)
+	token, err := j.createToken(uid, global.Config.Jwt.Secret)
 	if err != nil {
 		panic(err)
 	}
@@ -74,18 +75,15 @@ func GenJwtToken(uid int64) string {
 
 func VerifyJwtToken(tokenStr string) bool {
 	j := GetJwtInstance()
-	_, err := j.parseToken(tokenStr, Config.Jwt.Secret)
+	_, err := j.parseToken(tokenStr, global.Config.Jwt.Secret)
 	if err != nil {
 		return false
 	}
 	return true
 }
 
-func ParseJwtToken(tokenStr string) map[string]interface{} {
+func ParseJwtToken(tokenStr string) (map[string]interface{}, error) {
 	j := GetJwtInstance()
-	claim, err := j.parseToken(tokenStr, Config.Jwt.Secret)
-	if err != nil {
-		panic(err)
-	}
-	return claim
+	claim, err := j.parseToken(tokenStr, global.Config.Jwt.Secret)
+	return claim, err
 }

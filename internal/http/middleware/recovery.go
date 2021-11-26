@@ -14,7 +14,7 @@ func Recovery() gin.HandlerFunc {
 				message := error2Message(r)
 				global.Logger.Fatal(r)
 				rsp := global.Response.JsonFail(pkg.ServerError, pkg.OK, message, nil, "")
-				context.JSON(http.StatusInternalServerError, rsp)
+				context.JSON(http.StatusOK, rsp)
 				context.Abort()
 			}
 		}()
