@@ -1,5 +1,5 @@
 app :
-  name: gim
+  name: Jim
   ver: 1.0.1
   env: local
 http:
@@ -18,7 +18,7 @@ rpc:
   log: log/rpc.log
 
 mysql:
-  host: 127.0.0.1
+  host: 172.17.0.1
   port: 3306
   user: root
   password: root
@@ -26,14 +26,14 @@ mysql:
   database: jim
 
 redis:
-  host: 127.0.0.1
+  host: 172.17.0.1
   port: 6379
   user: ""
   password: ""
   db: 0
 
 jaeger:
-  host: 127.0.0.1
+  host: 172.17.0.1
   port: 6831
 
 jwt:
