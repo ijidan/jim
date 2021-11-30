@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"jim/internal/global"
+	"jim/global"
 	"jim/pkg"
 	"net/http"
 )

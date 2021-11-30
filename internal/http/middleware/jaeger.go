@@ -4,20 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	"jim/internal/global"
-	"jim/pkg"
+	"jim/global"
 	"time"
 )
 
 func Jaeger() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var httpSpan opentracing.Span
-
-		tracer, closer := pkg.NewJaeger(global.Config, "jim_api")
-		defer func() {
-			_ = closer.Close()
-		}()
-		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(context.Request.Header))
+		spanContext, err := global.Tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(context.Request.Header))
 		if err != nil {
 			httpSpan = opentracing.StartSpan(context.Request.URL.Path)
 			defer httpSpan.Finish()
@@ -30,7 +24,7 @@ func Jaeger() gin.HandlerFunc {
 			defer httpSpan.Finish()
 		}
 		context.Set("tracer_ctx", opentracing.ContextWithSpan(context, httpSpan))
-		context.Set("tracer", tracer)
+		context.Set("tracer", global.Tracer)
 
 		context.Next()
 	}

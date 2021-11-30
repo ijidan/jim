@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"jim/internal/global"
+	"jim/global"
 )
 
 func AccessLog() gin.HandlerFunc {

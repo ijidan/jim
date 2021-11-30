@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cast"
-	"jim/internal/global"
+	"jim/global"
 	"jim/internal/http/router"
 	"os"
 )
 
 func main() {
-	defer global.Close()
+	defer func() {
+		global.Close()
+	}()
 	http := global.Config.Http
 	r := router.NewGin(global.Config)
 	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
