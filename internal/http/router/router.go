@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"jim/config"
 	"jim/internal/http/controller"
@@ -33,6 +34,7 @@ func NewGin(conf *config.Config) *gin.Engine {
 			break
 		}
 		instance = gin.Default()
+		instance.Use(cors.Default())
 		instance.Use(middleware.Recovery(), middleware.AppSetting(), middleware.AccessLog(), middleware.Jaeger(), middleware.JwtVerify())
 		registerApi(instance)
 	})
