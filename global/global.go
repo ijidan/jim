@@ -24,6 +24,8 @@ var (
 )
 
 func Close() {
+	sqlDB, _ := Db.DB()
+	_ = sqlDB.Close()
 	_ = Rd.Close()
 	_ = Closer.Close()
 }
