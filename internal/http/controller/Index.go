@@ -13,7 +13,7 @@ import (
 func Pong(content *gin.Context) {
 	tracerCtx, exists := content.Get("tracer_ctx")
 	if exists {
-		span, _ := opentracing.StartSpanFromContext(tracerCtx.(context.Context), "Pong")
+		span, _ := opentracing.StartSpanFromContext(tracerCtx.(context.Context), "Controller:Pong")
 		defer span.Finish()
 	}
 
