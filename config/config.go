@@ -6,6 +6,11 @@ import (
 	"sync"
 )
 
+const EnvLocal = "local"
+const EnvTest = "test"
+const EnvStage = "stage"
+const EnvProduction = "production"
+
 type Config struct {
 	App struct {
 		Name string `yaml:"name"`

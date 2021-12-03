@@ -29,13 +29,15 @@ func NewGin(conf *config.Config) *gin.Engine {
 	once.Do(func() {
 		env := conf.App.Env
 		switch env {
-		case "local":
+		case config.EnvLocal:
 			gin.SetMode(gin.DebugMode)
 			break
-		case "test":
+		case config.EnvTest:
 			gin.SetMode(gin.TestMode)
 			break
-		case "production":
+		case config.EnvStage:
+			gin.SetMode(gin.TestMode)
+		case config.EnvProduction:
 		default:
 			gin.SetMode(gin.ReleaseMode)
 			break
