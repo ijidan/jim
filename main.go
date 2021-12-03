@@ -1,22 +1,30 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package main
 
-import "jim/cmd"
+import (
+	"fmt"
+	"github.com/spf13/cast"
+	"jim/cmd"
+	"jim/global"
+	"jim/internal/http/router"
+	"os"
+)
 
 func main() {
 	cmd.Execute()
+	defer func() {
+		global.Close()
+	}()
+	http := global.Config.Http
+	r := router.NewGin(global.Config)
+	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
+
+	fmt.Println("|-----------------------------------|")
+	fmt.Println("|                jim                |")
+	fmt.Println("|-----------------------------------|")
+	fmt.Println("|     Http Server Start Successful  |")
+	fmt.Println("|     Port:  " + cast.ToString(http.Port) + "        			|")
+	fmt.Println("|     Pid:   " + fmt.Sprintf("%d", os.Getpid()) + "        			|")
+	fmt.Println("|-----------------------------------|")
+	fmt.Println("")
+	_ = r.Run(addr)
 }
