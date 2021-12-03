@@ -32,18 +32,18 @@ func AccessLog() gin.HandlerFunc {
 
 		requestId := context.GetString(global.RequestId)
 		fields := logrus.Fields{
-			"startTime":  start,
-			"endTime":    end,
-			"latency":    latency,
-			"requestId":  requestId,
-			"statusCode": statusCode,
-			"clientIP":   clientIP,
-			"method":     method,
-			"path":       path,
+			"_startTime":  start,
+			"_endTime":    end,
+			"_latency":    latency,
+			"_requestId":  requestId,
+			"_statusCode": statusCode,
+			"_clientIP":   clientIP,
+			"_method":     method,
+			"_path":       path,
 		}
 		log := fmt.Sprintf("[GIN] %v | %15s | %3d | %13v | %15s | %-7s %s\n", end.Format("2006/01/02 - 15:04:05"),
 			requestId, statusCode, latency, clientIP, method, path)
-		global.Logger.WithFields(fields).Info("")
+		global.Logger.WithFields(fields).Info("access_log from middleware")
 		if gin.IsDebugging() {
 			_, _ = fmt.Fprintf(os.Stdout, log)
 		}

@@ -1,1 +1,0 @@
-{"clientIP":"127.0.0.1","endTime":"2021-12-03T14:26:34.4007888+08:00","latency":538700,"level":"info","method":"GET","msg":"","path":"/api/ping","requestId":"6e266ead-2600-4aa3-b031-5a46bd7f050c","startTime":"2021-12-03T14:26:34.4002501+08:00","statusCode":200,"time":"2021-12-03T14:26:34+08:00"}

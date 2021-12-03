@@ -5,6 +5,7 @@ import (
 	"jim/global"
 	"jim/pkg"
 	"net/http"
+	"runtime/debug"
 )
 
 func Recovery() gin.HandlerFunc {
@@ -12,6 +13,9 @@ func Recovery() gin.HandlerFunc {
 		defer func() {
 			if r := recover(); r != nil {
 				message := error2Message(r)
+				if gin.IsDebugging() {
+					debug.PrintStack()
+				}
 				global.Logger.Fatal(r)
 				rsp := global.Response.JsonFail(pkg.ServerError, pkg.OK, message, nil, "")
 				context.JSON(http.StatusOK, rsp)
