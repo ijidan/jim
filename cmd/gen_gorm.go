@@ -13,10 +13,11 @@ var genGormCmd = &cobra.Command{
 	Short: "auto gen gorm",
 	Long:  `auto gen gorm`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		// specify the output directory (default: "./query")
 		// ### if you want to query without context constrain, set mode gen.WithoutContext ###
 		g := gen.NewGenerator(gen.Config{
-			OutPath: "../internal/model",
+			OutPath: global.Root + "/internal/query",
 			/* Mode: gen.WithoutContext|gen.WithDefaultQuery*/
 			//if you want the nullable field generation property to be pointer type, set FieldNullable true
 			/* FieldNullable: true,*/
@@ -40,7 +41,7 @@ var genGormCmd = &cobra.Command{
 		// apply diy interfaces on structs or table models
 		//g.ApplyInterface(func(method model.Method) {}, model.User{}, g.GenerateModel("company"))
 
-		g.GenerateAllTable()
+		g.ApplyBasic(g.GenerateAllTable()...)
 		// execute the action of code generation
 		g.Execute()
 
