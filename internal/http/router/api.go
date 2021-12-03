@@ -18,7 +18,8 @@ func registerApi(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		api.GET("/ping", index.Pong)
-		api.GET("/user/register", user.Register)
+		api.POST("/user/register", user.Register)
+		api.POST("/usr/login", user.Login)
 	}
 }
 

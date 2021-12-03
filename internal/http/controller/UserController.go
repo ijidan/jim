@@ -17,3 +17,11 @@ func (c *UserController) Register(content *gin.Context) {
 	}
 	c.JsonSuccess(content, nil, "")
 }
+
+func (c *UserController) Login(content *gin.Context) {
+	var req request.UserLoginRequest
+	if err := content.ShouldBindJSON(&req); err != nil {
+		c.JsonFail(content, http.StatusBadRequest, 0, err.Error(), nil, "")
+	}
+	c.JsonSuccess(content, nil, "")
+}

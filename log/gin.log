@@ -1,4 +1,5 @@
-{"X-Request-Id":"eeff880f-3d2b-454b-ab6e-0dd8221bcc0c","level":"info","msg":"X-Request-Id","time":"2021-11-30T13:56:17+08:00"}
+{"X-Request-Id":"5980a2b0-7264-46c9-9e35-719a1bfe0c63","level":"info","msg":"X-Request-Id","time":"2021-12-02T18:41:16+08:00"}
+{"level":"fatal","msg":"Undefined validation function 'mobile' on field 'Mobile'","time":"2021-12-02T18:32:03+08:00"}
++08:00"}
 
-{"X-Request-Id":"fecd4280-6144-41a8-9628-7046a12eb9b5","level":"info","msg":"X-Request-Id","time":"2021-11-26T14:08:05+08:00"}
 {"X-Request-Id":"98faf7f6-ad21-44bc-a5a4-5e12b3fe18c9","level":"info","msg":"X-Request-Id","time":"2021-11-26T14:08:14+08:00"}
