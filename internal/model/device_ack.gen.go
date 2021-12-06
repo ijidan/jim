@@ -15,6 +15,7 @@ type DeviceAck struct {
 	Ack        int64     `gorm:"column:ack;not null;default:0" json:"ack"`                                 // 收到消息确认号
 	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"` // 创建时间
 	UpdateTime time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"` // 更新时间
+	Device     Device    `gorm:"foreignKey:device_id" json:"device"`
 }
 
 // TableName DeviceAck's table name

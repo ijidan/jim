@@ -1,7 +1,7 @@
 package request
 
 type UserRegisterRequest struct {
-	Mobile   string `form:"mobile" json:"mobile" binding:"required,mobile" `
+	Nickname string `form:"nickname" json:"nickname" binding:"required,nickname" `
 	Password string `form:"password" json:"password" binding:"required,min=6,max=18,alphanum"`
 }
 

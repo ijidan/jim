@@ -29,6 +29,11 @@ func newDeviceAck(db *gorm.DB) deviceAck {
 	_deviceAck.Ack = field.NewInt64(tableName, "ack")
 	_deviceAck.CreateTime = field.NewTime(tableName, "create_time")
 	_deviceAck.UpdateTime = field.NewTime(tableName, "update_time")
+	_deviceAck.Device = deviceAckBelongsToDevice{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Device", "model.Device"),
+	}
 
 	_deviceAck.fillFieldMap()
 
@@ -44,6 +49,7 @@ type deviceAck struct {
 	Ack        field.Int64
 	CreateTime field.Time
 	UpdateTime field.Time
+	Device     deviceAckBelongsToDevice
 
 	fieldMap map[string]field.Expr
 }
@@ -75,17 +81,84 @@ func (d *deviceAck) GetFieldByName(fieldName string) (field.Expr, bool) {
 }
 
 func (d *deviceAck) fillFieldMap() {
-	d.fieldMap = make(map[string]field.Expr, 5)
+	d.fieldMap = make(map[string]field.Expr, 6)
 	d.fieldMap["id"] = d.ID
 	d.fieldMap["device_id"] = d.DeviceID
 	d.fieldMap["ack"] = d.Ack
 	d.fieldMap["create_time"] = d.CreateTime
 	d.fieldMap["update_time"] = d.UpdateTime
+
 }
 
 func (d deviceAck) clone(db *gorm.DB) deviceAck {
 	d.deviceAckDo.ReplaceDB(db)
 	return d
+}
+
+type deviceAckBelongsToDevice struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a deviceAckBelongsToDevice) Where(conds ...field.Expr) *deviceAckBelongsToDevice {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a deviceAckBelongsToDevice) WithContext(ctx context.Context) *deviceAckBelongsToDevice {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a deviceAckBelongsToDevice) Model(m *model.DeviceAck) *deviceAckBelongsToDeviceTx {
+	return &deviceAckBelongsToDeviceTx{a.db.Model(m).Association(a.Name())}
+}
+
+type deviceAckBelongsToDeviceTx struct{ tx *gorm.Association }
+
+func (a deviceAckBelongsToDeviceTx) Find() (result *model.Device, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a deviceAckBelongsToDeviceTx) Append(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a deviceAckBelongsToDeviceTx) Replace(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a deviceAckBelongsToDeviceTx) Delete(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a deviceAckBelongsToDeviceTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a deviceAckBelongsToDeviceTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type deviceAckDo struct{ gen.DO }

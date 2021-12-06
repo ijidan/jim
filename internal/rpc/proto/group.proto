@@ -1,2 +1,2 @@
 syntax = "proto3";
-package proto.group;
+option go_package ="proto_build/";

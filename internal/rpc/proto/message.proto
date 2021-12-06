@@ -1,5 +1,5 @@
 syntax = "proto3";
-package proto.message;
+option go_package ="proto_build/";
 
 //消息类型
 enum MESSAGE_TYPE {

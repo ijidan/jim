@@ -26,12 +26,31 @@ func newUser(db *gorm.DB) user {
 	_user.ALL = field.NewField(tableName, "*")
 	_user.ID = field.NewInt64(tableName, "id")
 	_user.Nickname = field.NewString(tableName, "nickname")
+	_user.Password = field.NewString(tableName, "password")
+	_user.Key = field.NewString(tableName, "key")
 	_user.Gender = field.NewBool(tableName, "gender")
 	_user.AvatarURL = field.NewString(tableName, "avatar_url")
 	_user.Extra = field.NewString(tableName, "extra")
 	_user.CreatedAt = field.NewTime(tableName, "created_at")
 	_user.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_user.DeletedAt = field.NewField(tableName, "deleted_at")
+	_user.Device = userHasManyDevice{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Device", "model.Device"),
+	}
+
+	_user.Message = userHasManyMessage{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Message", "model.Device"),
+	}
+
+	_user.GroupUser = userManyToManyGroupUser{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("GroupUser", "model.GroupUser"),
+	}
 
 	_user.fillFieldMap()
 
@@ -44,12 +63,19 @@ type user struct {
 	ALL       field.Field
 	ID        field.Int64
 	Nickname  field.String
+	Password  field.String
+	Key       field.String
 	Gender    field.Bool
 	AvatarURL field.String
 	Extra     field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
 	DeletedAt field.Field
+	Device    userHasManyDevice
+
+	Message userHasManyMessage
+
+	GroupUser userManyToManyGroupUser
 
 	fieldMap map[string]field.Expr
 }
@@ -60,6 +86,8 @@ func (u user) As(alias string) *user {
 	u.ALL = field.NewField(alias, "*")
 	u.ID = field.NewInt64(alias, "id")
 	u.Nickname = field.NewString(alias, "nickname")
+	u.Password = field.NewString(alias, "password")
+	u.Key = field.NewString(alias, "key")
 	u.Gender = field.NewBool(alias, "gender")
 	u.AvatarURL = field.NewString(alias, "avatar_url")
 	u.Extra = field.NewString(alias, "extra")
@@ -82,20 +110,221 @@ func (u *user) GetFieldByName(fieldName string) (field.Expr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 8)
+	u.fieldMap = make(map[string]field.Expr, 13)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["nickname"] = u.Nickname
+	u.fieldMap["password"] = u.Password
+	u.fieldMap["key"] = u.Key
 	u.fieldMap["gender"] = u.Gender
 	u.fieldMap["avatar_url"] = u.AvatarURL
 	u.fieldMap["extra"] = u.Extra
 	u.fieldMap["created_at"] = u.CreatedAt
 	u.fieldMap["updated_at"] = u.UpdatedAt
 	u.fieldMap["deleted_at"] = u.DeletedAt
+
 }
 
 func (u user) clone(db *gorm.DB) user {
 	u.userDo.ReplaceDB(db)
 	return u
+}
+
+type userHasManyDevice struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a userHasManyDevice) Where(conds ...field.Expr) *userHasManyDevice {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a userHasManyDevice) WithContext(ctx context.Context) *userHasManyDevice {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a userHasManyDevice) Model(m *model.User) *userHasManyDeviceTx {
+	return &userHasManyDeviceTx{a.db.Model(m).Association(a.Name())}
+}
+
+type userHasManyDeviceTx struct{ tx *gorm.Association }
+
+func (a userHasManyDeviceTx) Find() (result []*model.Device, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a userHasManyDeviceTx) Append(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a userHasManyDeviceTx) Replace(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a userHasManyDeviceTx) Delete(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a userHasManyDeviceTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a userHasManyDeviceTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type userHasManyMessage struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a userHasManyMessage) Where(conds ...field.Expr) *userHasManyMessage {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a userHasManyMessage) WithContext(ctx context.Context) *userHasManyMessage {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a userHasManyMessage) Model(m *model.User) *userHasManyMessageTx {
+	return &userHasManyMessageTx{a.db.Model(m).Association(a.Name())}
+}
+
+type userHasManyMessageTx struct{ tx *gorm.Association }
+
+func (a userHasManyMessageTx) Find() (result []*model.Device, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a userHasManyMessageTx) Append(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a userHasManyMessageTx) Replace(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a userHasManyMessageTx) Delete(values ...*model.Device) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a userHasManyMessageTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a userHasManyMessageTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type userManyToManyGroupUser struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a userManyToManyGroupUser) Where(conds ...field.Expr) *userManyToManyGroupUser {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a userManyToManyGroupUser) WithContext(ctx context.Context) *userManyToManyGroupUser {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a userManyToManyGroupUser) Model(m *model.User) *userManyToManyGroupUserTx {
+	return &userManyToManyGroupUserTx{a.db.Model(m).Association(a.Name())}
+}
+
+type userManyToManyGroupUserTx struct{ tx *gorm.Association }
+
+func (a userManyToManyGroupUserTx) Find() (result *model.GroupUser, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a userManyToManyGroupUserTx) Append(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a userManyToManyGroupUserTx) Replace(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a userManyToManyGroupUserTx) Delete(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a userManyToManyGroupUserTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a userManyToManyGroupUserTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type userDo struct{ gen.DO }

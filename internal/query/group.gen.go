@@ -31,6 +31,11 @@ func newGroup(db *gorm.DB) group {
 	_group.CreatedAt = field.NewTime(tableName, "created_at")
 	_group.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_group.DeletedAt = field.NewField(tableName, "deleted_at")
+	_group.GroupUser = groupManyToManyGroupUser{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("GroupUser", "model.GroupUser"),
+	}
 
 	_group.fillFieldMap()
 
@@ -48,6 +53,7 @@ type group struct {
 	CreatedAt    field.Time
 	UpdatedAt    field.Time
 	DeletedAt    field.Field
+	GroupUser    groupManyToManyGroupUser
 
 	fieldMap map[string]field.Expr
 }
@@ -79,7 +85,7 @@ func (g *group) GetFieldByName(fieldName string) (field.Expr, bool) {
 }
 
 func (g *group) fillFieldMap() {
-	g.fieldMap = make(map[string]field.Expr, 7)
+	g.fieldMap = make(map[string]field.Expr, 8)
 	g.fieldMap["id"] = g.ID
 	g.fieldMap["name"] = g.Name
 	g.fieldMap["introduction"] = g.Introduction
@@ -87,11 +93,78 @@ func (g *group) fillFieldMap() {
 	g.fieldMap["created_at"] = g.CreatedAt
 	g.fieldMap["updated_at"] = g.UpdatedAt
 	g.fieldMap["deleted_at"] = g.DeletedAt
+
 }
 
 func (g group) clone(db *gorm.DB) group {
 	g.groupDo.ReplaceDB(db)
 	return g
+}
+
+type groupManyToManyGroupUser struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a groupManyToManyGroupUser) Where(conds ...field.Expr) *groupManyToManyGroupUser {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a groupManyToManyGroupUser) WithContext(ctx context.Context) *groupManyToManyGroupUser {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a groupManyToManyGroupUser) Model(m *model.Group) *groupManyToManyGroupUserTx {
+	return &groupManyToManyGroupUserTx{a.db.Model(m).Association(a.Name())}
+}
+
+type groupManyToManyGroupUserTx struct{ tx *gorm.Association }
+
+func (a groupManyToManyGroupUserTx) Find() (result *model.GroupUser, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a groupManyToManyGroupUserTx) Append(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a groupManyToManyGroupUserTx) Replace(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a groupManyToManyGroupUserTx) Delete(values ...*model.GroupUser) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a groupManyToManyGroupUserTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a groupManyToManyGroupUserTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type groupDo struct{ gen.DO }

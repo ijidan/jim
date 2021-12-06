@@ -1,5 +1,5 @@
 syntax="proto3";
-package proto.user;
+option go_package ="proto_build/";
 
 //性别
 enum Gender{

@@ -9,8 +9,8 @@ require (
 	github.com/gin-gonic/gin v1.7.6
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gofrs/uuid v4.1.0+incompatible
+	github.com/gogf/gf v1.16.6
 	github.com/golang-jwt/jwt/v4 v4.1.0
-	github.com/golang/mock v1.6.0
 	github.com/gomodule/redigo v1.8.5
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
