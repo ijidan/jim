@@ -33,7 +33,7 @@ var protocCmd = &cobra.Command{
 		fmt.Print(files)
 		for _, f := range files {
 			println(f.Name())
-			content := fmt.Sprintf("protoc --proto_path=%s/internal/rpc/proto/ --go_out=plugins=grpc:%s/internal/rpc %s", global.Root, global.Root, f.Name())
+			content := fmt.Sprintf("protoc --proto_path=%s/internal/rpc/proto/ --go_out=%s/internal/rpc --go-grpc_out=%s/internal/rpc %s", global.Root, global.Root, global.Root, f.Name())
 			if isWindows {
 				content = windowsReplace(content)
 			}

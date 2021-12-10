@@ -9,6 +9,8 @@ import (
 	"jim/config"
 	"jim/pkg"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 var (
@@ -31,6 +33,8 @@ func Close() {
 }
 func init() {
 	Root, _ = os.Getwd()
+	_, file, _, _ := runtime.Caller(0)
+	Root := filepath.Dir(filepath.Dir(file))
 	Config = config.GetConfigInstance(Root)
 	Logger = pkg.GetLoggerInstance(Config, Root)
 	Db = pkg.GetDbInstance(Config)

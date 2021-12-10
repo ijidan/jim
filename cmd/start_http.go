@@ -3,11 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
 	"jim/global"
 	"jim/internal/http/router"
 	"os"
-
-	"github.com/spf13/cobra"
 )
 
 // startHttpCmd represents the startHttp command

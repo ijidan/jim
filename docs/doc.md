@@ -5,9 +5,10 @@
   - GOPROXY：配置 "https://goproxy.io" 开启代理
 
 GRPC涉及的库：
-  - github.com/golang/protobuf/protoc-gen-go
-  - google.golang.org/grpc
+  - google.golang.org/`grpc`
   - google.golang.org/protobuf
+  - github.com/golang/protobuf/protoc-gen-go
+  - google.golang.org/grpc/cmd/protoc-gen-go-grpc
   
 编译命令：
   - protoc --proto_path=/vagrant/go_project/src/jgo/protected/proto  --go_out=plugins=grpc:/vagrant/go_project/src/jgo/protected/proto/build  *.proto
