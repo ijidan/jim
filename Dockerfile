@@ -5,13 +5,13 @@ ENV GO111MODULE=on \
     GOARCH=amd64 \
 	GOPROXY="https://goproxy.cn,direct"
 
-WORKDIR /data/jim
+WORKDIR /data/build
 COPY . .
 RUN go build -o app
 
 From golang:1.17-alpine3.15 as prod
-WORKDIR /data/jim
-COPY --from=builder /data/jim/app .
+WORKDIR /data/prod
+COPY --from=builder /data/build/app .
 EXPOSE 8081 8082 8083
-ENTRYPOINT ["./app"]
 
+ENTRYPOINT ["./app"]

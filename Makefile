@@ -5,6 +5,8 @@ OUTPUT_BUILD_DIR = /data/jim
 
 .PHONY : mod-down build run docker-compose grpc-server grpc-client clean help
 help:
+	@echo "make grpc -  grpc编译"
+	@echo "make mod-tidy -  Go Mod tidy"
 	@echo "make mod-down -  Go Mod下载"
 	@echo "make build - 编译 Go 代码, 生成二进制文件"
 	@echo "make run - 直接运行 Go 代码"
@@ -13,6 +15,10 @@ help:
 	@echo "make grpc-client - 运行grpc client代码"
 
 	@echo "make clean - 清除vendor"
+grpc: mod-tidy
+	protoc -I=internal/rpc/proto --go_out=internal/rpc internal/rpc/proto/*.proto
+mod-tidy:
+	@go mod tidy
 mod-down:
 	@go mod download
 build:
