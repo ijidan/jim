@@ -1,6 +1,8 @@
 syntax="proto3";
 option go_package ="proto_build/";
 
+import "google/api/annotations.proto";
+
 message PingRequest{
 }
 
@@ -9,6 +11,10 @@ message PingResponse{
 }
 
 service PingService{
-  rpc ping(PingRequest) returns(PingResponse){}
+  rpc ping(PingRequest) returns(PingResponse){
+    option (google.api.http) = {
+      get: "/v1/ping/ping"
+    };
+  }
 }
 
