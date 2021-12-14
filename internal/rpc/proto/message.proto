@@ -1,6 +1,5 @@
 syntax = "proto3";
-option go_package ="proto_build;proto_build";
-
+option go_package ="proto_build/";
 //消息类型
 enum MESSAGE_TYPE {
   TEXT = 0;  //文本消息。

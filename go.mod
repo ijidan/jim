@@ -12,6 +12,8 @@ require (
 	github.com/gogf/gf v1.16.6
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/gomodule/redigo v1.8.5
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.1
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
@@ -20,6 +22,7 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/uber/jaeger-client-go v2.29.1+incompatible
 	google.golang.org/grpc v1.42.0
+	google.golang.org/protobuf v1.27.1
 	gorm.io/driver/mysql v1.2.1
 	gorm.io/gen v0.1.29
 	gorm.io/gorm v1.22.4
@@ -50,7 +53,7 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
+	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/hints v1.1.0 // indirect
 )
@@ -69,5 +72,3 @@ require (
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gorm.io/datatypes v1.0.4 // indirect
 )
-
-require google.golang.org/protobuf v1.27.1
