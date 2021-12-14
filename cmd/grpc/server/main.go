@@ -18,6 +18,18 @@ import (
 	"strings"
 )
 
+func main() {
+	defer func() {
+		global.Close()
+	}()
+	rpc := global.Config.Rpc
+	err := runServer(rpc.Host, rpc.Port)
+	if err != nil {
+		grpclog.Fatalln("failed to listen：", err)
+	}
+
+}
+
 func runHttpServer() *http.ServeMux {
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
@@ -44,11 +56,19 @@ func runGrpcGatewayServer(host string, port uint) *gwruntime.ServeMux {
 	endpoint := fmt.Sprintf("%s:%d", host, port)
 	gwMux := gwruntime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := proto_build.RegisterPingServiceHandlerFromEndpoint(context.Background(), gwMux, endpoint, opts)
-	if err != nil {
-		return nil
-	}
-
+	ctx := context.Background()
+	errs := make(chan error)
+	go func() {
+		if err := proto_build.RegisterPingServiceHandlerFromEndpoint(ctx, gwMux, endpoint, opts); err != nil {
+			errs <- err
+		}
+	}()
+	go func() {
+		select {
+		case err := <-errs:
+			grpclog.Fatalln("failed to listen：%v", err)
+		}
+	}()
 	return gwMux
 }
 
@@ -70,16 +90,4 @@ func grpcHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handler) http.Ha
 			otherHandler.ServeHTTP(w, r)
 		}
 	}), &http2.Server{})
-}
-
-func main() {
-	defer func() {
-		global.Close()
-	}()
-	rpc := global.Config.Rpc
-	err := runServer(rpc.Host, rpc.Port)
-	if err != nil {
-		grpclog.Fatalln("failed to listen：", err)
-	}
-
 }

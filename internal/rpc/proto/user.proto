@@ -1,6 +1,8 @@
 syntax="proto3";
 option go_package ="proto_build/";
 
+import "google/api/annotations.proto";
+
 //性别
 enum Gender{
   Unknown = 0; //未知
@@ -30,6 +32,10 @@ message CreateUserResponse{
 }
 
 service UserService{
-  rpc createUser(CreateUserRequest) returns(CreateUserResponse){}
+  rpc createUser(CreateUserRequest) returns(CreateUserResponse){
+    option (google.api.http) = {
+      get: "/api/user"
+    };
+  }
 }
 
