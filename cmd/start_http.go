@@ -16,10 +16,10 @@ var startHttpCmd = &cobra.Command{
 	Long:  `start http server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		defer func() {
-			global.Close()
+			pkg.Close()
 		}()
-		http := global.Config.Http
-		r := router.NewGin(global.Config)
+		http := pkg.Conf.Http
+		r := router.NewGin(pkg.Conf)
 		addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
 
 		fmt.Println("|-----------------------------------|")

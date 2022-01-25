@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cast"
-	"jim/global"
 	"jim/internal/http/router"
+	"jim/pkg"
 	"os"
 )
 
@@ -26,10 +26,10 @@ func buildTable(host string, port uint, pid int) *tablewriter.Table {
 
 func main() {
 	defer func() {
-		global.Close()
+		pkg.Close()
 	}()
-	http := global.Config.Http
-	r := router.NewGin(global.Config)
+	http := pkg.Conf.Http
+	r := router.NewGin(pkg.Conf)
 	addr := fmt.Sprintf("%s:%d", http.Host, http.Port)
 	// Send output
 	table := buildTable(http.Host, http.Port, os.Getpid())

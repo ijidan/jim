@@ -34,7 +34,7 @@ func (c *BasicCall) buildCtx() {
 
 //构建链接
 func (c *BasicCall) buildConnection() {
-	address := fmt.Sprintf("%s:%d", global.Config.Rpc.Host, global.Config.Rpc.Port)
+	address := fmt.Sprintf("%s:%d", pkg.Conf.Rpc.Host, pkg.Conf.Rpc.Port)
 	conn := buildConnection(address)
 	//defer conn.Close()
 	c.conn = conn

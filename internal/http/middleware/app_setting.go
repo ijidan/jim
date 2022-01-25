@@ -3,7 +3,6 @@ package middleware
 import (
 	sContext "context"
 	"github.com/gin-gonic/gin"
-	"jim/global"
 	"jim/pkg"
 	"time"
 )
@@ -12,15 +11,15 @@ func AppSetting() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.Set(
 			"app_name",
-			global.Config.App.Name,
+			pkg.Conf.App.Name,
 		)
-		context.Set("app_ver", global.Config.App.Ver)
-		requestId := context.Request.Header.Get(global.RequestId)
+		context.Set("app_ver", pkg.Conf.App.Ver)
+		requestId := context.Request.Header.Get(pkg.RequestId)
 		if requestId == "" {
 			requestId = pkg.GetUUId()
 		}
-		context.Set(global.RequestId, requestId)
-		context.Writer.Header().Set(global.RequestId, requestId)
+		context.Set(pkg.RequestId, requestId)
+		context.Writer.Header().Set(pkg.RequestId, requestId)
 
 		ctx, cancel := sContext.WithTimeout(context, 2*time.Second)
 		defer cancel()

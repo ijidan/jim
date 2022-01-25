@@ -21,7 +21,7 @@ var protocCmd = &cobra.Command{
 		if runtime.GOOS == "windows" {
 			isWindows = true
 		}
-		protoPath := fmt.Sprintf("%s/internal/rpc/proto", global.Root)
+		protoPath := fmt.Sprintf("%s/internal/rpc/proto", pkg.Root)
 		if isWindows {
 			protoPath = windowsReplace(protoPath)
 		}
@@ -33,7 +33,7 @@ var protocCmd = &cobra.Command{
 		fmt.Print(files)
 		for _, f := range files {
 			println(f.Name())
-			content := fmt.Sprintf("protoc --proto_path=%s/internal/rpc/proto/ --go_out=%s/internal/rpc --go-grpc_out=%s/internal/rpc %s", global.Root, global.Root, global.Root, f.Name())
+			content := fmt.Sprintf("protoc --proto_path=%s/internal/rpc/proto/ --go_out=%s/internal/rpc --go-grpc_out=%s/internal/rpc %s", pkg.Root, pkg.Root, pkg.Root, f.Name())
 			if isWindows {
 				content = windowsReplace(content)
 			}

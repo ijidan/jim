@@ -5,28 +5,28 @@ import (
 	"sync"
 )
 
-type Response struct {
+type HttpResponse struct {
 }
 
-func (r *Response) JsonSuccess(data map[string]interface{}, jumpUrl string) gin.H {
+func (r *HttpResponse) JsonSuccess(data map[string]interface{}, jumpUrl string) gin.H {
 	return gin.H{"code": 0, "message": "success", "data": data, "jump_url": jumpUrl}
 }
 
-func (r *Response) JsonFail(code int32, businessCode int32, message string, data map[string]interface{}, jumpUrl string) gin.H {
+func (r *HttpResponse) JsonFail(code int32, businessCode int32, message string, data map[string]interface{}, jumpUrl string) gin.H {
 	return gin.H{"code": code, "business_code": businessCode, "message": message, "data": data, "jump_url": jumpUrl}
 }
 
-func (r *Response) Pager() {
+func (r *HttpResponse) Pager() {
 }
 
 var (
 	onceResponse     sync.Once
-	instanceResponse *Response
+	instanceResponse *HttpResponse
 )
 
-func GetResponseInstance() *Response {
+func GetResponseInstance() *HttpResponse {
 	onceResponse.Do(func() {
-		instanceResponse = &Response{}
+		instanceResponse = &HttpResponse{}
 	})
 	return instanceResponse
 }

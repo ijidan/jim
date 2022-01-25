@@ -4,17 +4,17 @@ app :
   env: local
 http:
   host: 0.0.0.0
-  port: 8081
+  port: 9091
   log: log/gin.log
 
 websocket:
   host: 0.0.0.0
-  port: 8082
+  port: 9092
   log: log/websocket.log
 
 rpc:
-  host: 0.0.0.0
-  port: 8083
+  host: 127.0.0.1
+  port: 9093
   log: log/rpc.log
 
 mysql:
@@ -26,18 +26,23 @@ mysql:
   database: jim
 
 redis:
-  host: 172.17.0.1
+  host: 127.0.0.1
   port: 6379
   user: ""
   password: ""
   db: 0
 
 jaeger:
-  host: 172.17.0.1
+  host: 127.0.0.1
   port: 6831
 
 jwt:
   secret: __jim__
+
+etcd:
+  host:
+    - 127.0.0.1:2379 #127.0.0.1:2379
+  timeout: 6831
 
 pager:
   page_size: 10

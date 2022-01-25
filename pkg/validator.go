@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"github.com/go-playground/validator/v10"
+	"jim/internal/repository"
 	"regexp"
 )
 
@@ -14,4 +15,23 @@ func MobileValidator(f validator.FieldLevel) bool {
 		return false
 	}
 
+}
+
+func ImageValidator(f validator.FieldLevel) bool {
+	value := f.Field().String()
+	if value == "" {
+		return false
+	}
+	var checkImageFormat = map[string]bool{
+		repository.ImageFormatOfJpg:  true,
+		repository.ImageFormatOfJpeg: true,
+		repository.ImageFormatOfGif:  true,
+		repository.ImageFormatOfPng:  true,
+		repository.ImageFormatOfBmp:  true,
+	}
+	_, ok := checkImageFormat[value]
+	if !ok {
+		return false
+	}
+	return false
 }

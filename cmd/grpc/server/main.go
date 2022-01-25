@@ -20,9 +20,9 @@ import (
 
 func main() {
 	defer func() {
-		global.Close()
+		pkg.Close()
 	}()
-	rpc := global.Config.Rpc
+	rpc := pkg.Conf.Rpc
 	err := runServer(rpc.Host, rpc.Port)
 	if err != nil {
 		grpclog.Fatalln("failed to listen：", err)

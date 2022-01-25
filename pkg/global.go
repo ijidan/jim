@@ -1,4 +1,4 @@
-package global
+package pkg
 
 import (
 	"github.com/gomodule/redigo/redis"
@@ -7,18 +7,17 @@ import (
 	"gorm.io/gorm"
 	"io"
 	"jim/config"
-	"jim/pkg"
 	"path/filepath"
 	"runtime"
 )
 
 var (
 	Root      string
-	Config    *config.Config
+	Conf      *config.Config
 	Logger    *logrus.Logger
 	Db        *gorm.DB
 	Rd        redis.Conn
-	Response  *pkg.Response
+	Rsp       *HttpResponse
 	Tracer    opentracing.Tracer
 	Closer    io.Closer
 	RequestId string
@@ -33,11 +32,11 @@ func Close() {
 func init() {
 	_, file, _, _ := runtime.Caller(0)
 	Root = filepath.Dir(filepath.Dir(file))
-	Config = config.GetConfigInstance(Root)
-	Logger = pkg.GetLoggerInstance(Config, Root)
-	Db = pkg.GetDbInstance(Config)
-	Rd = pkg.GetRdInstance(Config)
-	Response = pkg.GetResponseInstance()
-	Tracer, Closer = pkg.NewJaeger(Config, "jim_api")
+	Conf = config.GetConfigInstance(Root)
+	Logger = GetLoggerInstance(Conf, Root)
+	Db = GetDbInstance(Conf)
+	Rd = GetRdInstance(Conf)
+	Rsp = GetResponseInstance()
+	Tracer, Closer = NewJaeger(Conf, "jim")
 	RequestId = "X-Request-Id"
 }

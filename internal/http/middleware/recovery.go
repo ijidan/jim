@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"jim/global"
 	"jim/pkg"
 	"net/http"
 	"runtime/debug"
@@ -16,8 +15,8 @@ func Recovery() gin.HandlerFunc {
 				if gin.IsDebugging() {
 					debug.PrintStack()
 				}
-				global.Logger.Fatal(r)
-				rsp := global.Response.JsonFail(pkg.ServerError, pkg.OK, message, nil, "")
+				pkg.Logger.Fatal(r)
+				rsp := pkg.Rsp.JsonFail(pkg.ServerError, pkg.OK, message, nil, "")
 				context.JSON(http.StatusOK, rsp)
 				context.Abort()
 			}

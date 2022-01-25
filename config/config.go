@@ -57,6 +57,10 @@ type Config struct {
 	Pager struct {
 		PageSize uint `yaml:"page_size"`
 	}
+	Etcd struct {
+		Host    []string `yaml:"host"`
+		Timeout uint64   `yaml:"timeout"`
+	}
 }
 
 var (

@@ -12,9 +12,9 @@ import (
 
 func main() {
 	defer func() {
-		global.Close()
+		pkg.Close()
 	}()
-	rpc := global.Config.Rpc
+	rpc := pkg.Conf.Rpc
 	address := fmt.Sprintf("%s:%d", rpc.Host, rpc.Port)
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {

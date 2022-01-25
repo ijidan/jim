@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"jim/global"
+	"jim/pkg"
 	"os"
 	"time"
 )
@@ -30,7 +30,7 @@ func AccessLog() gin.HandlerFunc {
 			path = path + "?" + raw
 		}
 
-		requestId := context.GetString(global.RequestId)
+		requestId := context.GetString(pkg.RequestId)
 		fields := logrus.Fields{
 			"_startTime":  start,
 			"_endTime":    end,
@@ -43,7 +43,7 @@ func AccessLog() gin.HandlerFunc {
 		}
 		log := fmt.Sprintf("[GIN] %v | %15s | %3d | %13v | %15s | %-7s %s\n", end.Format("2006/01/02 - 15:04:05"),
 			requestId, statusCode, latency, clientIP, method, path)
-		global.Logger.WithFields(fields).Info("access_log from middleware")
+		pkg.Logger.WithFields(fields).Info("access_log from middleware")
 		if gin.IsDebugging() {
 			_, _ = fmt.Fprintf(os.Stdout, log)
 		}
