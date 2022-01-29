@@ -12,13 +12,11 @@ type BaseController struct {
 func (c *BaseController) JsonSuccess(ctx *gin.Context, data map[string]interface{}, jumpUrl string) {
 	rsp := pkg.Rsp.JsonSuccess(data,jumpUrl)
 	ctx.JSON(http.StatusOK, rsp)
-	return
 }
 
 func (c *BaseController) JsonFail(ctx *gin.Context, code int32, businessCode int32, message string, data map[string]interface{}, jumpUrl string) {
 	rsp := pkg.Rsp.JsonFail(code, businessCode, message, data, jumpUrl)
 	ctx.JSON(http.StatusOK, rsp)
-	return
 }
 
 func (c *BaseController) GetLoginUserId() uint64  {
