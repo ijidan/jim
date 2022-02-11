@@ -33,7 +33,7 @@ redis:
   db: 0
 
 jaeger:
-  host: 127.0.0.1
+  host: 172.17.0.1 #127.0.0.1
   port: 6831
 
 jwt:
